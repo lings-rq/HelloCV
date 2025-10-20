@@ -3,7 +3,14 @@
 Ubuntu 22.04;
 ROS2 humble；
 OpenCV 4.5.4；
+CMake 3.22.1;
 项目结构：
-Linux中记录了Linux学习过程和基本指令汇总
-git学习中主要记录了常见代码，git的基本内容，工作流等
-实践任务中记录了四项任务的完成情况
+Docker学习中记录了学习过程；
+Cmake学习中记录了学习过程；
+第二周实践任务记录了实践任务过程；
+使用方法：
+CMakeLists.txt放在源代码目录中然后：
+mkdir build && cd build
+cmake ..
+make
+./Crypto
