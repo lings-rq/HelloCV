@@ -1,84 +1,48 @@
-#include<iostream> 
-#include<string>
-#include<fstream>
-#include<iterator>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
 using namespace std;
 
-class Crypto{
-public:
-	string Xor(const string& text,int key){
-		string result;
-		for(int i=0;i<text.size();i++){
-		char ch=text[i];
- 		result+=ch^key;
-}
-		return result;
-	}
-};
-class FileHandler{
-public:
-	string read(const string& filepath){
-		ifstream file(filepath.c_str());
-		string content((istreambuf_iterator<char>(file)),{});
-		file.close();
-		return content;
-	}
-	void write(const string& filepath,const string& content){
-		ofstream file(filepath.c_str());
-		file<<content;
-		file.close();
-		cout<<"saved successfully";
-	}
-};
-class Menu{
-private:
-	Crypto target;
-	FileHandler fileact;
-public:
-	void handletext(){
-		string text,result;
-		int key;
-		cout<<"please input the text:"<<endl;
-		getline(cin,text);
-		cout<<"please input the key:"<<endl;
-		cin>>key;
-		result=target.Xor(text,key);
-		cout<<"The result is:"<<result<<endl;
-	}
-	void handlefile(){
-		string in,out,text,result;
-		int key;
-		cout<<"input the infilepath"<<endl;
-		getline(cin,in);
-		text=fileact.read(in);
-		cout<<"input the key"<<endl;
-		cin>>key;
-		result=target.Xor(text,key);
-		cout<<"input the outfilepath"<<endl;
-		getline(cin,out);
-		fileact.write(out,result);
-	}
-	void showMenu(){
-		int choice;
-		cout<<"请输入加密选项："<<endl;
-		cout<<"文本加密/解密——1"<<endl;
-		cout<<"文件加密/解密——2"<<endl;
-		cin>>choice;
-		cin.ignore();
-		switch(choice){
-			case 1:
-				handletext();
-				break;
-			case 2:
-				handlefile();
-				break;
-			default:
-				cout<<"Wrong input!"<<endl;
-		} 
-	}
-};
-int main(){
-	Menu start;
-	start.showMenu();
-	return 0;
+int main() {
+    VideoCapture cap("TrafficLight.mp4");
+    VideoWriter writer("output.avi", 0, 30, Size(640, 480));
+    
+    Mat frame, hsv, red_mask, green_mask;
+    vector<vector<Point>> contours;
+    
+    while (true) {
+        cap >> frame;
+        if (frame.empty()) break;
+        
+        cvtColor(frame, hsv, COLOR_BGR2HSV);
+        
+        inRange(hsv, Scalar(0, 100, 100), Scalar(10, 255, 255), red_mask);
+        inRange(hsv, Scalar(40, 50, 50), Scalar(90, 255, 255), green_mask);
+        
+        findContours(red_mask, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            vector<Point> approx;
+            approxPolyDP(contours[i], approx, 0.02 * arcLength(contours[i], true), true);
+            if (approx.size() > 8) {
+                Rect rect = boundingRect(contours[i]);
+                putText(frame, "Red", Point(rect.x, rect.y-10), 
+                        FONT_HERSHEY_SIMPLEX, 0.7, Scalar(0, 0, 255), 2);
+            }
+        }
+        
+        findContours(green_mask, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            vector<Point> approx;
+            approxPolyDP(contours[i], approx, 0.02 * arcLength(contours[i], true), true);
+            if (approx.size() > 8) {
+                Rect rect = boundingRect(contours[i]);
+                putText(frame, "Green", Point(rect.x, rect.y-10), 
+                        FONT_HERSHEY_SIMPLEX, 0.7, Scalar(0, 255, 0), 2);
+            }
+        }
+        
+        writer.write(frame);
+    }
+    
+    return 0;
 }
