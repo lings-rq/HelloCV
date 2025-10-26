@@ -10,7 +10,7 @@ CMake 3.22.1;
 opencv学习中记录了学习过程；
 第三周实践任务记录了实践任务过程；
 
-TrafficLight中是这次作业的具体代码；
+main.cpp中是这次作业的具体代码；
 CMakeLists.txt是CMakeLists.txt；
 使用方法：
 CMakeLists.txt放在源代码目录中然后：
