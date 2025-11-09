@@ -7,14 +7,10 @@ CMake 3.22.1;
 
 项目结构：
 在语雀文档.md中附上了两个链接：
-opencv学习中记录了学习过程；
-第三周实践任务记录了实践任务过程；
 
-main.cpp中是这次作业的具体代码；
-CMakeLists.txt是CMakeLists.txt；
-使用方法：
-CMakeLists.txt放在源代码目录中然后：
-mkdir build && cd build
-cmake ..
-make
-./TrafficLight
+ROS2学习中记录了学习过程；
+Gazebo学习中记录了学习过程；
+
+说明：
+ROS2学习是主要学习过程，记录了ros2基础知识的知识点，并在一些知识点的最后附上了个人理解。
+Gazebo学习在文档最后附上了个人理解
